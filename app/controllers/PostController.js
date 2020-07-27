@@ -2,9 +2,13 @@ const Post = require('../models/Post.js');
 
 // Create and Save a new Note
 exports.create = async (req, res) => {
+    var {title,content,idUser,idCategory} = req.body;
     var post = await Post.create({ 
-        title : "Bài viết số 1",
-        content : "Nội dung của bài viết số 1"
+        title,
+        content,
+        view : 0,
+        idUser,
+        idCategory 
     });
     if(post){
         return res.status(201).json({
@@ -20,8 +24,15 @@ exports.create = async (req, res) => {
 };
 
 // Retrieve and return all notes from the database.
-exports.findAll = (req, res) => {
+exports.findAll = async (req, res) => {
+    var listPost = await Post.find();
 
+    if(listPost){
+        return res.status(201).json({
+            message : "successfully",
+            data:listPost
+        });
+    }
 };
 
 // Find a single note with a noteId
@@ -50,3 +61,23 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
 
 };
+
+// find post by category id
+exports.findByCategory = async (req, res)=>{
+    let idCat = req.params.id; 
+    var listPost = await Post.find({idCategory : idCat}).limit(3);
+    if(listPost){
+        return res.status(201).json({
+            message : "successfully",
+            data:listPost
+        }); 
+    }else{
+        return res.status(500).json({
+            message : "fails"
+        }); 
+    }
+}
+// find top 5 post popular
+exports.findPostPopular = async (req, res) => {
+
+}
