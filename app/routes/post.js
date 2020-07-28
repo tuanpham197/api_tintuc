@@ -7,4 +7,6 @@ router.get('/',PostController.findAll);
 router.post('/',PostController.create);
 router.get('/cat/:id',PostController.findByCategory);
 
+router.get('/all',PostController.findAllPostCategory);
+
 module.exports = router;

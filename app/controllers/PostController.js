@@ -8,7 +8,8 @@ exports.create = async (req, res) => {
         content,
         view : 0,
         idUser,
-        idCategory 
+        idCategory,
+        thumb : "newpost.png"
     });
     if(post){
         return res.status(201).json({
@@ -59,7 +60,7 @@ exports.update = (req, res) => {
 
 // Delete a note with the specified noteId in the request
 exports.delete = (req, res) => {
-
+    
 };
 
 // find post by category id
@@ -80,4 +81,17 @@ exports.findByCategory = async (req, res)=>{
 // find top 5 post popular
 exports.findPostPopular = async (req, res) => {
 
+}
+
+// find all post and category
+exports.findAllPostCategory = async (req, res) => {
+    var list =await Post.aggregate()
+                        .group({ _id: "$idCategory" , posts: { $push: "$$ROOT" } } )
+                        .sort({scores : -1})
+                        .project({items : {"$slice" : ["$posts",3]}})
+                        
+    return res.status(200).json({
+        message : "successfully",
+        data : list
+    })
 }
